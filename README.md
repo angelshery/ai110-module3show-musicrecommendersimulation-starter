@@ -2,34 +2,74 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This project simulates a small music recommender system using a content-based filtering approach. The system recommends songs by comparing song attributes such as genre, mood, energy, tempo_bpm, valence, danceability, and acousticness with a user's taste profile. Instead of using behavior from many users, this recommender focuses on the features of each song and calculates how closely they match a user's preferences. The goal of this project is to show how recommendation systems can turn structured song data into personalized suggestions.
 
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+This recommender uses a content-based filtering method. Each song is represented by features such as genre, mood, energy, tempo_bpm, valence, danceability, and acousticness. The user profile stores preference information such as favorite genre, favorite mood, target energy, and whether the user likes acoustic songs.
 
-Some prompts to answer:
+The recommender computes a score for each song by comparing the song's features with the user's preferences. Songs receive strong points when the genre and mood match the user's taste. Numerical features such as energy, tempo, valence, and danceability are scored based on how close they are to the user's preferred values. After all songs are scored, the system ranks them from highest to lowest score and recommends the top results.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+This design is inspired by real-world recommendation systems, which often combine content-based filtering with collaborative filtering. However, this project focuses only on song features and user taste data, making the logic easier to understand and explain.
 
-You can include a simple diagram or bullet list if helpful.
+### Features Used
 
----
+**Song**
+- genre
+- mood
+- energy
+- tempo_bpm
+- valence
+- danceability
+- acousticness
+
+**UserProfile**
+- favorite_genre
+- favorite_mood
+- target_energy
+- likes_acoustic
+
+### Example User Profile
+
+For this simulation, I use a user profile with the following preferences:
+
+- favorite_genre: lofi
+- favorite_mood: chill
+- target_energy: 0.4
+- likes_acoustic: true
+
+This profile represents a listener who prefers calm, lower-energy music with a more acoustic feel. I chose it because it creates a clear contrast with intense, high-energy songs such as rock or EDM, making it easier to test whether the recommender can distinguish between different musical vibes.
+
+### Algorithm Recipe
+
+My recommender uses a weighted scoring approach for each song.
+
+- +2.0 points if the song's genre matches the user's favorite genre
+- +1.5 points if the song's mood matches the user's favorite mood
+- Up to +1.0 point based on how close the song's energy is to the user's target energy
+- +0.75 points if the song's acousticness matches the user's acoustic preference
+
+After scoring every song in the catalog, the system sorts them from highest to lowest score and returns the top K recommendations.
+
+### Potential Biases
+
+This system may over-prioritize genre and mood, which means it could ignore songs that have a very similar vibe but belong to a different genre. It may also over-favor songs with acousticness values that fit the user's preference threshold, even when other features are strong matches. Because the catalog is small, the recommendations may reflect the limited genres and moods available in the dataset rather than the full range of a real user's taste.
+
+### Recommendation Flow
+
+```mermaid
+flowchart TD
+    A[User Preferences] --> B[Load songs from CSV]
+    B --> C[Loop through each song]
+    A --> C
+    C --> D[Compare genre, mood, energy, acousticness]
+    D --> E[Calculate weighted score]
+    E --> F[Store song and score]
+    F --> G[Rank all songs by score]
+    G --> H[Return Top K recommendations]
+```
 
 ## Getting Started
 
@@ -68,25 +108,19 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+### CLI Output Example
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+Below is an example of the recommender running in the terminal with the default user profile.
+
+![CLI Screenshot](output.png)
+
+For the default profile, songs like **Sunrise City** and **Gym Hero** ranked highly because they matched the user's preferred genre, mood, and energy level. This showed that the scoring logic was working as expected and that the recommender could explain why each song was selected.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+This recommender works on a small catalog and only uses a limited set of song features. It does not consider lyrics, artist familiarity, listening history, or changing user tastes over time. Because the scoring gives strong weight to genre and mood, it may overlook songs from other genres that still match the user's overall vibe. The small dataset may also make the system seem more certain than it really is, since there are fewer alternatives to compare.
 
 ---
 
@@ -96,19 +130,13 @@ Read and complete `model_card.md`:
 
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
+Working on this project helped me understand how recommendation systems turn structured data into predictions. Even a simple recommender can compare song features with a user profile, assign scores, and rank songs in a way that feels personalized.
 
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
+I also realized how easily bias can appear. Since the system heavily relies on genre and mood, it may repeatedly recommend similar types of songs and ignore others that could still match the user's vibe. This shows how real-world systems can create filter bubbles by limiting diversity.
 
 
 ---
 
-## 7. `model_card_template.md`
-
-Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
-
-```markdown
 # 🎧 Model Card - Music Recommender Simulation
 
 ## 1. Model Name
