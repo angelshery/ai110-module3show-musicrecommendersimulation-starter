@@ -10,7 +10,7 @@ You will implement the functions in recommender.py:
 """
 
 from src.recommender import load_songs, recommend_songs
-
+from tabulate import tabulate
 
 def main() -> None:
     songs = load_songs("data/songs.csv") 
@@ -45,13 +45,17 @@ def main() -> None:
 
     for profile_name, user_prefs in profiles.items():
         recommendations = recommend_songs(user_prefs, songs, k=5)
-
         print(f"\n=== {profile_name} ===\n")
-        for song, score, explanation in recommendations:
-            print(f"{song['title']} - Score: {score:.2f}")
-            print(f"Because: {explanation}")
-            print()
 
+        table_data = []
+        for song, score, explanation in recommendations:
+            table_data.append([
+                song["title"],
+                f"{score:.2f}",
+                explanation
+            ])
+
+        print(tabulate(table_data, headers=["Song", "Score", "Reason"], tablefmt="grid"))
 
 if __name__ == "__main__":
     main()
