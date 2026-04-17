@@ -61,29 +61,23 @@ Prompts:
 
 ## 6. Limitations and Bias 
 
-Where the system struggles or behaves unfairly. 
+The recommender has a few limitations based on how the scoring logic is designed. It only considers a small set of features such as genre, mood, energy, and acousticness, and does not take into account important factors like lyrics, artist popularity, or user listening history.
 
-Prompts:  
+One key issue observed during testing is that the system can over-prioritize energy and genre. Songs like Gym Hero appeared across multiple profiles because they matched strong features like high energy, even when other preferences such as mood were different. This shows that the system may overfit to certain features and not fully respect all user preferences.
 
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+The dataset is also small, which means some genres and moods are underrepresented. This can reduce diversity in recommendations and create a filter-bubble effect, where similar types of songs are repeatedly suggested instead of introducing variety.
 
 ---
 
 ## 7. Evaluation  
 
-How you checked whether the recommender behaved as expected. 
+I evaluated the recommender by testing it with four different user profiles: High-Energy Pop, Chill Lofi, Deep Intense Rock, and an edge-case profile with high energy but a sad mood.
 
-Prompts:  
+For each profile, I looked at the top 5 recommended songs and checked whether they matched the expected vibe. The High-Energy Pop profile correctly ranked energetic and upbeat songs, while the Chill Lofi profile shifted toward calmer and more acoustic tracks. The Deep Intense Rock profile favored intense, high-energy songs, which showed that the scoring logic was working as intended.
 
-- Which user profiles you tested  
-- What you looked for in the recommendations  
-- What surprised you  
-- Any simple tests or comparisons you ran  
+One surprising result came from the edge-case profile. Even though the mood was set to sad, the recommender still returned energetic songs like Gym Hero. This showed that energy and genre were influencing the ranking more strongly than mood, especially when preferences conflict.
 
-No need for numeric metrics unless you created some.
+I also ran a small experiment by increasing the importance of energy and reducing the importance of genre. After this change, high-energy songs appeared even more frequently across different profiles. This confirmed that changing weights directly affects the behavior of the recommender and can introduce bias toward certain features.
 
 ---
 

@@ -116,6 +116,47 @@ Below is an example of the recommender running in the terminal with the default 
 
 For the default profile, songs like **Sunrise City** and **Gym Hero** ranked highly because they matched the user's preferred genre, mood, and energy level. This showed that the scoring logic was working as expected and that the recommender could explain why each song was selected.
 
+I tested the recommender using multiple user profiles to evaluate how it behaves under different preferences:
+
+- High-Energy Pop
+- Chill Lofi
+- Deep Intense Rock
+- Edge Case (high energy but sad mood)
+
+### High-Energy Pop
+![High Energy](high_energy.png)
+
+### Chill Lofi
+![Chill Lofi](chill_lofi.png)
+
+### Deep Intense Rock
+![Rock](deep_intense.png)
+
+### Edge Case
+![Edge Case](edge_case.png)
+
+### Observations
+
+For the High-Energy Pop profile, songs like **Sunrise City** ranked highly because they matched both genre and mood while also having strong energy similarity.
+
+For the Chill Lofi profile, songs like **Midnight Coding** and **Library Rain** appeared at the top, which matched expectations because they had low energy and acoustic characteristics.
+
+For the Deep Intense Rock profile, high-energy songs such as **Storm Runner** ranked highest, showing that energy and mood strongly influenced the output.
+
+The Edge Case profile (high energy but sad mood) revealed a limitation. The recommender still returned energetic songs instead of sad ones, showing that the system struggles with conflicting preferences.
+
+### Experiment: Weight Shift
+
+I modified the scoring logic by reducing the genre weight and increasing the importance of energy.
+
+After this change, high-energy songs appeared more frequently across different profiles, even when genre did not match. This showed that energy became the dominant factor in ranking.
+
+This experiment helped demonstrate how changing weights directly affects recommendation behavior and can introduce bias toward certain features.
+### Testing
+
+I also ran the automated tests for the recommender using:
+python -m pytest
+
 ---
 
 ## Limitations and Risks
@@ -125,6 +166,12 @@ This recommender works on a small catalog and only uses a limited set of song fe
 ---
 
 ## Reflection
+
+When comparing the different profiles, I noticed clear differences in how the recommendations changed. The High-Energy Pop profile pushed energetic and upbeat songs to the top, while the Chill Lofi profile favored lower-energy and more acoustic tracks. This shows that the recommender responds well to energy and acoustic preferences.
+
+The Deep Intense Rock profile focused more on intense songs with high energy, which made sense because both genre and energy were strong matches. In contrast, the edge-case profile (high energy but sad mood) revealed a weakness. Even though the user selected a sad mood, the recommender still returned energetic songs.
+
+This helped explain why songs like Gym Hero kept appearing. The system gives strong weight to energy, so songs with high energy tend to rank highly even when other preferences do not fully match. This shows how the scoring logic can create bias and affect the final recommendations.
 
 Read and complete `model_card.md`:
 
